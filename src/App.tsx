@@ -19,6 +19,8 @@ const skills = [
   "JavaScript",
   "Sass",
   "Node.js",
+  "REST APIs",
+  "MongoDB",
   "Responsive UI",
   "Landing Pages",
   "Contact Form Fixes",
