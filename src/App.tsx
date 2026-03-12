@@ -2,8 +2,7 @@ import { useState } from "react";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
-// Sign up free at https://formspree.io → create a form → paste your form ID below
-const FORMSPREE_ID = "YOUR_FORM_ID";
+const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID as string | undefined;
 
 type Project = {
   title: string;
@@ -60,6 +59,12 @@ function ContactForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (!FORMSPREE_ID) {
+      setStatus("error");
+      return;
+    }
+
     setStatus("loading");
     try {
       const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
