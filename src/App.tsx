@@ -1,3 +1,10 @@
+import { useState } from "react";
+
+type FormStatus = "idle" | "loading" | "success" | "error";
+
+// Sign up free at https://formspree.io → create a form → paste your form ID below
+const FORMSPREE_ID = "YOUR_FORM_ID";
+
 type Project = {
   title: string;
   description: string;
@@ -42,6 +49,94 @@ const projects: Project[] = [
     linkHref: "#contact"
   }
 ];
+
+function ContactForm() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<FormStatus>("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    try {
+      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name, email, message })
+      });
+      if (res.ok) {
+        setStatus("success");
+        setName("");
+        setEmail("");
+        setMessage("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="form-feedback form-feedback--success">
+        <p>Thanks! I'll get back to you soon.</p>
+        <button className="button button-secondary" onClick={() => setStatus("idle")}>
+          Send another message
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      {status === "error" && (
+        <p className="form-feedback form-feedback--error">
+          Something went wrong — please try again or email me directly.
+        </p>
+      )}
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="cf-name">Name</label>
+          <input
+            id="cf-name"
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="cf-email">Email</label>
+          <input
+            id="cf-email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+      </div>
+      <div className="form-group">
+        <label htmlFor="cf-message">Message</label>
+        <textarea
+          id="cf-message"
+          rows={5}
+          placeholder="How can I help?"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          required
+        />
+      </div>
+      <button className="button button-primary" type="submit" disabled={status === "loading"}>
+        {status === "loading" ? "Sending…" : "Send Message"}
+      </button>
+    </form>
+  );
+}
 
 function App() {
   const year = new Date().getFullYear();
@@ -161,17 +256,25 @@ function App() {
 
         <section className="section section-cta" id="contact">
           <div className="container contact-shell">
-            <div>
+            <div className="contact-info">
               <p className="section-tag">Contact</p>
               <h2>Need help improving a site or shipping a front-end update?</h2>
               <p>
-                If you need layout fixes, a landing page, a small React feature, or general front-end cleanup, I’m available to talk through the work.
+                If you need layout fixes, a landing page, a small React feature, or general front-end cleanup, I'm available to talk through the work.
               </p>
+              <ul className="contact-links">
+                <li>
+                  <a href="mailto:glenn.dunnegan@gmail.com">glenn.dunnegan@gmail.com</a>
+                </li>
+                <li>
+                  <a href="https://github.com/Glenn-Dunnegan" target="_blank" rel="noreferrer">
+                    github.com/Glenn-Dunnegan
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div className="content-card contact-card">
-              <a href="mailto:glenn.dunnegan@gmail.com">glenn.dunnegan@gmail.com</a>
-              <a href="https://github.com/Glenn-Dunnegan">github.com/Glenn-Dunnegan</a>
-              <a href="https://glenn-dunnegan.github.io/Portfolio/">Portfolio on GitHub Pages</a>
+            <div className="content-card">
+              <ContactForm />
             </div>
           </div>
         </section>
