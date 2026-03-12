@@ -33,8 +33,8 @@ const projects: Project[] = [
     title: "Roofing Company",
     description: "A polished service-business landing page rebuilt with React, TypeScript, and Sass for a cleaner workflow and easier future updates.",
     stack: ["React", "TypeScript", "Sass"],
-    linkLabel: "View code",
-    linkHref: "https://github.com/Glenn-Dunnegan"
+    linkLabel: "Live demo",
+    linkHref: "https://roofing-biz.netlify.app/"
   },
   {
     title: "Freelance Finance",
