@@ -9,34 +9,36 @@ type Project = {
 const skills = [
   "React",
   "TypeScript",
+  "JavaScript",
   "Sass",
   "Node.js",
-  "REST APIs",
-  "SQL",
   "Responsive UI",
+  "Landing Pages",
+  "Contact Form Fixes",
+  "Performance Improvements",
   "GitHub Pages"
 ];
 
 const projects: Project[] = [
   {
-    title: "Business Website",
-    description: "A polished small-business website focused on lead generation, responsiveness, and clear service messaging.",
+    title: "Roofing Company",
+    description: "A polished service-business landing page rebuilt with React, TypeScript, and Sass for a cleaner workflow and easier future updates.",
     stack: ["React", "TypeScript", "Sass"],
-    linkLabel: "View project",
-    linkHref: "#projects"
+    linkLabel: "View code",
+    linkHref: "https://github.com/Glenn-Dunnegan"
   },
   {
-    title: "Full-Stack App",
-    description: "A web application with front-end and back-end integration, emphasizing reusable components and maintainable structure.",
-    stack: ["React", "Node.js", "SQL"],
-    linkLabel: "See details",
-    linkHref: "#projects"
+    title: "Freelance Finance",
+    description: "A responsive React and TypeScript application that helps freelancers manage financial information through a clean, practical interface.",
+    stack: ["React", "TypeScript", "Finance UI"],
+    linkLabel: "Live demo",
+    linkHref: "https://freelance-finance.com/"
   },
   {
-    title: "Portfolio Platform",
-    description: "A personal brand site designed to showcase skills, work samples, and easy ways for clients or employers to connect.",
-    stack: ["Vite", "TypeScript", "GitHub Pages"],
-    linkLabel: "Explore more",
+    title: "Portfolio Site",
+    description: "This GitHub Pages portfolio, designed to present services, project highlights, and a professional front-end presence with fast deployment.",
+    stack: ["Vite", "GitHub Pages", "TypeScript"],
+    linkLabel: "Contact me",
     linkHref: "#contact"
   }
 ];
@@ -49,7 +51,7 @@ function App() {
       <header className="site-header">
         <div className="container nav-shell">
           <a className="brand" href="#top">
-            Portfolio
+            Glenn Dunnegan
           </a>
           <nav aria-label="Primary navigation">
             <ul className="nav-list">
@@ -74,11 +76,11 @@ function App() {
         <section className="hero">
           <div className="container hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">Developer • Designer • Problem Solver</p>
-              <h1>Building clean, modern web experiences that turn ideas into working products.</h1>
+              <p className="eyebrow">Web Developer • React • Website Fixes</p>
+              <h1>I help businesses fix and improve their websites quickly.</h1>
               <p className="lead">
-                I create responsive websites and applications with a focus on clarity, performance, and maintainable code.
-                This starter portfolio is built with React, TypeScript, and Sass to deploy easily on GitHub Pages.
+                I’m Glenn Dunnegan, a web developer focused on responsive front-end work, small React features, landing pages,
+                broken page fixes, contact forms, and performance improvements that make sites easier to use and easier to trust.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#projects">
@@ -90,11 +92,11 @@ function App() {
               </div>
             </div>
             <aside className="hero-panel" aria-label="Quick summary card">
-              <p className="panel-label">Currently focused on</p>
+              <p className="panel-label">What I help with</p>
               <ul>
-                <li>Responsive front-end development</li>
-                <li>Reusable React component systems</li>
-                <li>Type-safe UI architecture</li>
+                <li>Mobile layout fixes and responsive updates</li>
+                <li>Landing pages and business website improvements</li>
+                <li>Small React and JavaScript features</li>
               </ul>
             </aside>
           </div>
@@ -104,15 +106,16 @@ function App() {
           <div className="container split-layout">
             <div>
               <p className="section-tag">About</p>
-              <h2>Creating digital work that feels professional and approachable.</h2>
+              <h2>Practical front-end work built around clarity, speed, and real business needs.</h2>
             </div>
             <div className="content-card">
               <p>
-                I build websites and applications that are fast, easy to use, and designed with real users in mind. My work centers on
-                thoughtful layouts, scalable front-end structure, and practical solutions that support business goals.
+                I’ve been steadily building my web development skills with a strong focus on front-end implementation and full-stack fundamentals.
+                My goal is simple: deliver websites that look professional, work reliably, and solve actual problems for the people using them.
               </p>
               <p>
-                This project is a ready-to-edit portfolio starter. Swap in your own bio, project links, resume, and contact details to make it yours.
+                I enjoy modern React workflows, clean TypeScript structure, and improving existing sites when they need better layout, stronger
+                usability, or faster performance.
               </p>
             </div>
           </div>
@@ -121,7 +124,7 @@ function App() {
         <section className="section section-muted" id="skills">
           <div className="container">
             <p className="section-tag">Skills</p>
-            <h2>Tools and technologies I enjoy using.</h2>
+            <h2>Tools and services I use to improve business websites.</h2>
             <div className="pill-grid">
               {skills.map((skill) => (
                 <span key={skill} className="pill">
@@ -135,7 +138,7 @@ function App() {
         <section className="section" id="projects">
           <div className="container">
             <p className="section-tag">Projects</p>
-            <h2>Selected work and starter examples.</h2>
+            <h2>Recent work and representative examples.</h2>
             <div className="project-grid">
               {projects.map((project) => (
                 <article key={project.title} className="project-card">
@@ -147,7 +150,9 @@ function App() {
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
-                  <a href={project.linkHref}>{project.linkLabel}</a>
+                  <a href={project.linkHref} target={project.linkHref.startsWith("http") ? "_blank" : undefined} rel={project.linkHref.startsWith("http") ? "noreferrer" : undefined}>
+                    {project.linkLabel}
+                  </a>
                 </article>
               ))}
             </div>
@@ -158,15 +163,15 @@ function App() {
           <div className="container contact-shell">
             <div>
               <p className="section-tag">Contact</p>
-              <h2>Let’s build something useful together.</h2>
+              <h2>Need help improving a site or shipping a front-end update?</h2>
               <p>
-                Replace these placeholders with your real contact information, social links, or a form service such as Formspree.
+                If you need layout fixes, a landing page, a small React feature, or general front-end cleanup, I’m available to talk through the work.
               </p>
             </div>
             <div className="content-card contact-card">
-              <a href="mailto:yourname@example.com">yourname@example.com</a>
-              <a href="https://github.com/yourusername">GitHub Profile</a>
-              <a href="https://www.linkedin.com/in/yourusername/">LinkedIn Profile</a>
+              <a href="mailto:glenn.dunnegan@gmail.com">glenn.dunnegan@gmail.com</a>
+              <a href="https://github.com/Glenn-Dunnegan">github.com/Glenn-Dunnegan</a>
+              <a href="https://glenn-dunnegan.github.io/Portfolio/">Portfolio on GitHub Pages</a>
             </div>
           </div>
         </section>
@@ -174,7 +179,7 @@ function App() {
 
       <footer className="site-footer">
         <div className="container footer-shell">
-          <p>© {year} Portfolio. Built with React, TypeScript, and Sass.</p>
+          <p>© {year} Glenn Dunnegan. Built with React, TypeScript, and Sass.</p>
         </div>
       </footer>
     </>
