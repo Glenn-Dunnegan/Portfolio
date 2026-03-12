@@ -2,7 +2,8 @@ import { useState } from "react";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
-const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID as string | undefined;
+// Form IDs are public endpoint identifiers, so a fallback keeps contact form working on static deploys.
+const FORMSPREE_ID = (import.meta.env.VITE_FORMSPREE_ID as string | undefined) || "xwvrodkr";
 
 type Project = {
   title: string;
@@ -59,11 +60,6 @@ function ContactForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
-    if (!FORMSPREE_ID) {
-      setStatus("error");
-      return;
-    }
 
     setStatus("loading");
     try {
