@@ -115,7 +115,14 @@ export default {
         "Content-Type": "application/json",
         "Accept": "application/json"
       },
-      body: JSON.stringify({ name: safeName, email: safeEmail, message: safeMessage })
+      body: JSON.stringify({
+        name: safeName,
+        email: safeEmail,
+        message: safeMessage,
+        _replyto: safeEmail,
+        _subject: `Portfolio contact: ${safeName}`,
+        source: "portfolio-contact-form"
+      })
     });
 
     if (!formspreeResponse.ok) {

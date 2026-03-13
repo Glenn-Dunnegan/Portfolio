@@ -255,6 +255,7 @@ function ContactForm() {
             placeholder="Your name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            minLength={2}
             required
           />
         </div>
@@ -288,6 +289,7 @@ function ContactForm() {
           placeholder="How can I help?"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          minLength={10}
           required
         />
       </div>
