@@ -212,8 +212,13 @@ function ContactForm() {
         setStatus("success");
         resetFormState();
       } else {
+        const payload = (await res.json().catch(() => null)) as { error?: string } | null;
         setStatus("error");
-        setErrorMessage("Verification failed. Please try again.");
+        if (payload?.error === "spam_suspected") {
+          setErrorMessage("Please remove links/promotional text and provide a normal project message.");
+        } else {
+          setErrorMessage("Verification failed. Please try again.");
+        }
         resetTurnstile();
       }
     } catch {

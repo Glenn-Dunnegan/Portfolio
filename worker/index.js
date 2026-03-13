@@ -12,6 +12,36 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function containsUrl(text) {
+  return /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|net|org|info|biz|ru|cn)\b)/i.test(text);
+}
+
+function hasExcessiveRepeats(text) {
+  return /(.)\1{6,}/.test(text);
+}
+
+function hasHighDigitRatio(text) {
+  const digits = (text.match(/\d/g) || []).length;
+  return text.length > 0 && digits / text.length > 0.35;
+}
+
+function hasSuspiciousKeywords(text) {
+  return /(crypto|bitcoin|forex|seo services|backlinks|casino|betting|loan approval|whatsapp)/i.test(text);
+}
+
+function isLikelySpam(name, message) {
+  const combined = `${name} ${message}`;
+  const lineBreaks = (message.match(/\n/g) || []).length;
+
+  if (containsUrl(combined)) return true;
+  if (hasExcessiveRepeats(combined)) return true;
+  if (hasHighDigitRatio(combined)) return true;
+  if (hasSuspiciousKeywords(combined)) return true;
+  if (lineBreaks > 12) return true;
+
+  return false;
+}
+
 function corsHeaders(origin) {
   return {
     "Access-Control-Allow-Origin": origin,
@@ -92,6 +122,10 @@ export default {
 
     if (safeName.length > 100 || safeEmail.length > 254 || safeMessage.length > 5000) {
       return jsonResponse(origin, 400, { ok: false, error: "field_limits_exceeded" });
+    }
+
+    if (safeMessage.length < 20 || isLikelySpam(safeName, safeMessage)) {
+      return jsonResponse(origin, 400, { ok: false, error: "spam_suspected" });
     }
 
     const verifyResponse = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
