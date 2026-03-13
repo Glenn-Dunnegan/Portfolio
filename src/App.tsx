@@ -29,6 +29,13 @@ const skills = [
   "GitHub Pages"
 ];
 
+const heroServiceBadges = [
+  "React + TypeScript Builds",
+  "Landing Page Refreshes",
+  "Contact Form + Spam Protection",
+  "Responsive Performance Fixes"
+];
+
 const projects: Project[] = [
   {
     title: "Roofing Company",
@@ -339,12 +346,19 @@ function App() {
         <section className="hero">
           <div className="container hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">Web Developer • React • Website Fixes</p>
-              <h1>I help businesses fix and improve their websites quickly.</h1>
+              <p className="eyebrow">Front-End Developer • React • Conversion-Focused Fixes</p>
+              <h1>From broken pages to polished experiences, I ship practical front-end upgrades fast.</h1>
               <p className="lead">
-                I’m Glenn Dunnegan, a web developer focused on responsive front-end work, small React features, landing pages,
-                broken page fixes, contact forms, and performance improvements that make sites easier to use and easier to trust.
+                I help small businesses improve trust and usability with clean React builds, better mobile layouts, stronger contact
+                workflows, and targeted performance updates that make websites feel professional and reliable.
               </p>
+              <div className="hero-badge-grid" aria-label="Core services">
+                {heroServiceBadges.map((item) => (
+                  <span key={item} className="hero-badge">
+                    {item}
+                  </span>
+                ))}
+              </div>
               <div className="hero-actions">
                 <a className="button button-primary" href="#projects">
                   View Projects
@@ -355,11 +369,11 @@ function App() {
               </div>
             </div>
             <aside className="hero-panel" aria-label="Quick summary card">
-              <p className="panel-label">What I help with</p>
+              <p className="panel-label">Core strengths</p>
               <ul>
-                <li>Mobile layout fixes and responsive updates</li>
-                <li>Landing pages and business website improvements</li>
-                <li>Small React and JavaScript features</li>
+                <li>Diagnosing and fixing front-end issues quickly</li>
+                <li>Building modern landing pages for service businesses</li>
+                <li>Improving contact forms, usability, and trust signals</li>
               </ul>
             </aside>
           </div>
