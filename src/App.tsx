@@ -64,6 +64,7 @@ function ContactForm() {
   const startedAtRef = useRef(Date.now());
   const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
   const turnstileWidgetIdRef = useRef<string | undefined>(undefined);
+  const initAttemptedRef = useRef(false);
   const missingConfigVars: string[] = [];
 
   if (!CONTACT_API_URL) {
@@ -99,19 +100,29 @@ function ContactForm() {
     }
 
     const renderWidget = () => {
+      if (initAttemptedRef.current) {
+        return;
+      }
+
       if (!window.turnstile || !turnstileContainerRef.current || turnstileWidgetIdRef.current) {
         return;
       }
 
-      turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
-        sitekey: TURNSTILE_SITE_KEY,
-        callback: (token: string) => {
-          setTurnstileToken(token);
-          setErrorMessage("");
-        },
-        "expired-callback": () => setTurnstileToken(""),
-        "error-callback": () => setTurnstileToken("")
-      });
+      try {
+        initAttemptedRef.current = true;
+        turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token: string) => {
+            setTurnstileToken(token);
+            setErrorMessage("");
+          },
+          "expired-callback": () => setTurnstileToken(""),
+          "error-callback": () => setTurnstileToken("")
+        });
+      } catch {
+        setStatus("error");
+        setErrorMessage("Captcha could not initialize. Check allowed domains in Turnstile settings.");
+      }
     };
 
     if (window.turnstile) {
@@ -133,6 +144,14 @@ function ContactForm() {
     script.async = true;
     script.defer = true;
     script.addEventListener("load", renderWidget, { once: true });
+    script.addEventListener(
+      "error",
+      () => {
+        setStatus("error");
+        setErrorMessage("Captcha script failed to load.");
+      },
+      { once: true }
+    );
     document.head.appendChild(script);
 
     return () => script.removeEventListener("load", renderWidget);
@@ -180,11 +199,15 @@ function ContactForm() {
 
     setStatus("loading");
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
       const res = await fetch(CONTACT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, message, turnstileToken })
+        body: JSON.stringify({ name, email, message, turnstileToken }),
+        signal: controller.signal
       });
+      clearTimeout(timeout);
       if (res.ok) {
         setStatus("success");
         resetFormState();
@@ -195,7 +218,7 @@ function ContactForm() {
       }
     } catch {
       setStatus("error");
-      setErrorMessage("Something went wrong. Please try again.");
+      setErrorMessage("Request timed out or failed. Please try again.");
       resetTurnstile();
     }
   }
