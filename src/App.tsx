@@ -269,7 +269,7 @@ function ContactForm() {
         />
       </div>
       {!isMissingConfig && <div className="turnstile-wrap" ref={turnstileContainerRef} />}
-      <button className="button button-primary" type="submit" disabled={status === "loading" || isMissingConfig}>
+      <button className="button button-primary" type="submit" disabled={status === "loading"}>
         {status === "loading" ? "Sending…" : "Send Message"}
       </button>
     </form>
