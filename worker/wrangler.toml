@@ -1,0 +1,7 @@
+name = "portfolio-contact-proxy"
+main = "index.js"
+compatibility_date = "2026-03-13"
+
+[vars]
+# Comma-separated origins are supported (example: local + production).
+ALLOWED_ORIGIN = "https://glenn-dunnegan.github.io"

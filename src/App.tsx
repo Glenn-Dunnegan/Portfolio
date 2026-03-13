@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
-// Form IDs are public endpoint identifiers, so a fallback keeps contact form working on static deploys.
-const FORMSPREE_ID = (import.meta.env.VITE_FORMSPREE_ID as string | undefined) || "xwvrodkr";
+const CONTACT_API_URL = import.meta.env.VITE_CONTACT_API_URL as string | undefined;
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+const MIN_SUBMIT_MS = 4000;
 
 type Project = {
   title: string;
@@ -56,28 +57,146 @@ function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [company, setCompany] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
+  const startedAtRef = useRef(Date.now());
+  const turnstileContainerRef = useRef<HTMLDivElement | null>(null);
+  const turnstileWidgetIdRef = useRef<string | undefined>(undefined);
+  const missingConfigVars: string[] = [];
+
+  if (!CONTACT_API_URL) {
+    missingConfigVars.push("VITE_CONTACT_API_URL");
+  }
+
+  if (!TURNSTILE_SITE_KEY) {
+    missingConfigVars.push("VITE_TURNSTILE_SITE_KEY");
+  }
+
+  const isMissingConfig = missingConfigVars.length > 0;
+  const showDevConfigHint = import.meta.env.DEV && isMissingConfig;
+
+  function resetTurnstile() {
+    setTurnstileToken("");
+    if (turnstileWidgetIdRef.current && window.turnstile) {
+      window.turnstile.reset(turnstileWidgetIdRef.current);
+    }
+  }
+
+  function resetFormState() {
+    setName("");
+    setEmail("");
+    setMessage("");
+    setCompany("");
+    resetTurnstile();
+    startedAtRef.current = Date.now();
+  }
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !turnstileContainerRef.current) {
+      return;
+    }
+
+    const renderWidget = () => {
+      if (!window.turnstile || !turnstileContainerRef.current || turnstileWidgetIdRef.current) {
+        return;
+      }
+
+      turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (token: string) => {
+          setTurnstileToken(token);
+          setErrorMessage("");
+        },
+        "expired-callback": () => setTurnstileToken(""),
+        "error-callback": () => setTurnstileToken("")
+      });
+    };
+
+    if (window.turnstile) {
+      renderWidget();
+      return;
+    }
+
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"]'
+    );
+
+    if (existingScript) {
+      existingScript.addEventListener("load", renderWidget, { once: true });
+      return () => existingScript.removeEventListener("load", renderWidget);
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.addEventListener("load", renderWidget, { once: true });
+    document.head.appendChild(script);
+
+    return () => script.removeEventListener("load", renderWidget);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setErrorMessage("");
+
+    const elapsedMs = Date.now() - startedAtRef.current;
+    const filledHoneypot = company.trim().length > 0;
+
+    // Ignore likely bot submissions without sending anything to Formspree.
+    if (filledHoneypot || elapsedMs < MIN_SUBMIT_MS) {
+      setStatus("success");
+      resetFormState();
+      return;
+    }
+
+    if (!CONTACT_API_URL) {
+      setStatus("error");
+      setErrorMessage(
+        import.meta.env.DEV
+          ? "Missing VITE_CONTACT_API_URL in .env for local testing."
+          : "Contact endpoint is not configured."
+      );
+      return;
+    }
+
+    if (!TURNSTILE_SITE_KEY) {
+      setStatus("error");
+      setErrorMessage(
+        import.meta.env.DEV
+          ? "Missing VITE_TURNSTILE_SITE_KEY in .env for local testing."
+          : "Captcha site key is not configured."
+      );
+      return;
+    }
+
+    if (!turnstileToken) {
+      setStatus("error");
+      setErrorMessage("Please complete the spam check before submitting.");
+      return;
+    }
 
     setStatus("loading");
     try {
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      const res = await fetch(CONTACT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, message })
+        body: JSON.stringify({ name, email, message, turnstileToken })
       });
       if (res.ok) {
         setStatus("success");
-        setName("");
-        setEmail("");
-        setMessage("");
+        resetFormState();
       } else {
         setStatus("error");
+        setErrorMessage("Verification failed. Please try again.");
+        resetTurnstile();
       }
     } catch {
       setStatus("error");
+      setErrorMessage("Something went wrong. Please try again.");
+      resetTurnstile();
     }
   }
 
@@ -94,9 +213,14 @@ function ContactForm() {
 
   return (
     <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      {showDevConfigHint && (
+        <p className="form-feedback form-feedback--info" role="status" aria-live="polite">
+          Local setup missing: {missingConfigVars.join(", ")}. Add these values to your .env file.
+        </p>
+      )}
       {status === "error" && (
-        <p className="form-feedback form-feedback--error">
-          Something went wrong — please try again or email me directly.
+        <p className="form-feedback form-feedback--error" role="alert">
+          {errorMessage || "Something went wrong — please try again or email me directly."}
         </p>
       )}
       <div className="form-row">
@@ -123,6 +247,16 @@ function ContactForm() {
           />
         </div>
       </div>
+      <input
+        aria-hidden="true"
+        autoComplete="off"
+        name="company"
+        onChange={(e) => setCompany(e.target.value)}
+        style={{ display: "none" }}
+        tabIndex={-1}
+        type="text"
+        value={company}
+      />
       <div className="form-group">
         <label htmlFor="cf-message">Message</label>
         <textarea
@@ -134,7 +268,8 @@ function ContactForm() {
           required
         />
       </div>
-      <button className="button button-primary" type="submit" disabled={status === "loading"}>
+      {!isMissingConfig && <div className="turnstile-wrap" ref={turnstileContainerRef} />}
+      <button className="button button-primary" type="submit" disabled={status === "loading" || isMissingConfig}>
         {status === "loading" ? "Sending…" : "Send Message"}
       </button>
     </form>

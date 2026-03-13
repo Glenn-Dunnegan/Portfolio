@@ -32,7 +32,8 @@ jobs:
 
       - name: Build site
         env:
-          VITE_FORMSPREE_ID: ${{ secrets.VITE_FORMSPREE_ID }}
+          VITE_CONTACT_API_URL: ${{ secrets['VITE_CONTACT_API_URL'] }}
+          VITE_TURNSTILE_SITE_KEY: ${{ secrets['VITE_TURNSTILE_SITE_KEY'] }}
         run: npm run build
 
       - name: Upload Pages artifact
