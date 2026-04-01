@@ -52,9 +52,16 @@ const projects: Project[] = [
     linkHref: "https://freelance-finance.com/"
   },
   {
+    title: "Field Service REST API",
+    description: "A full-stack Node.js and Express REST API built for a real service business. Features JWT authentication, role-based access control, job and work order management, image uploads, password reset with email, and real-time schedule updates via Socket.io. Backed by MongoDB with Mongoose.",
+    stack: ["Node.js", "Express", "MongoDB", "JWT", "Socket.io"],
+    linkLabel: "View code",
+    linkHref: "https://github.com/Glenn-Dunnegan/Epjrapi"
+  },
+  {
     title: "Portfolio Site",
-    description: "This GitHub Pages portfolio, designed to present services, project highlights, and a professional front-end presence with fast deployment.",
-    stack: ["Vite", "GitHub Pages", "TypeScript"],
+    description: "This portfolio, built with React, TypeScript, Sass, and a Cloudflare Worker backend for the contact form. Includes Turnstile spam protection, a honeypot field, and request timing checks.",
+    stack: ["Vite", "TypeScript", "Sass", "Cloudflare Workers"],
     linkLabel: "Contact me",
     linkHref: "#contact"
   }
