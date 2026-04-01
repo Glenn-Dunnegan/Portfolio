@@ -479,7 +479,7 @@ function App() {
           <div className="container contact-shell">
             <div className="contact-info">
               <p className="section-tag">Contact</p>
-              <h2>Open to web developer and front-end opportunities.</h2>
+              <h2>Open to Front-End and Full-Stack Web Developer Opportunities.</h2>
               <p>
                 If you are hiring for a role involving React, TypeScript, responsive UI work, or practical full-stack web development,
                 I would be glad to talk.
