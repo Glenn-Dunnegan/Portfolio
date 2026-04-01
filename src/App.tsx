@@ -9,6 +9,7 @@ const MIN_SUBMIT_MS = 4000;
 type Project = {
   title: string;
   description: string;
+  highlights: string[];
   stack: string[];
   linkLabel: string;
   linkHref: string;
@@ -22,45 +23,70 @@ const skills = [
   "Node.js",
   "REST APIs",
   "MongoDB",
+  "JWT Authentication",
+  "Role-Based Access Control",
+  "API Integration",
+  "Analytics Integration",
+  "Form Validation",
+  "Deployment Workflows",
+  "Technical SEO Basics",
   "Responsive UI",
-  "Landing Pages",
-  "Contact Form Fixes",
   "Performance Improvements",
-  "GitHub Pages"
+  "Component-Based UI"
 ];
 
 const heroServiceBadges = [
-  "React + TypeScript Builds",
-  "Landing Page Refreshes",
-  "Contact Form + Spam Protection",
-  "Responsive Performance Fixes"
+  "React + TypeScript Interfaces",
+  "Responsive Front-End Implementation",
+  "REST API Integration",
+  "Production-Minded UI Fixes"
 ];
 
 const projects: Project[] = [
   {
     title: "Roofing Company",
     description: "A polished service-business landing page rebuilt with React, TypeScript, and Sass for a cleaner workflow and easier future updates.",
+    highlights: [
+      "Rebuilt the site with a modern React and TypeScript structure for easier long-term maintenance.",
+      "Improved responsive layout and presentation for a service business that needs trust and clarity on mobile.",
+      "Used Sass for cleaner styling organization and faster iteration on UI updates."
+    ],
     stack: ["React", "TypeScript", "Sass"],
     linkLabel: "Live demo",
     linkHref: "https://roofing-biz.netlify.app/"
   },
   {
     title: "Freelance Finance",
-    description: "A responsive React and TypeScript application that helps freelancers manage financial information through a clean, practical interface.",
-    stack: ["React", "TypeScript", "Finance UI"],
+    description: "A responsive React and TypeScript application for freelance pricing and invoicing, expanded with guide content, analytics, and technical SEO work aimed at crawlability and discoverability.",
+    highlights: [
+      "Built a multi-route React application with calculator, invoice, and guide pages structured for both usability and crawlable content discovery.",
+      "Added canonical and robots metadata, GA4 page-view tracking, and guide content routes to support technical SEO and content visibility.",
+      "Set up GitHub Actions build checks plus crawler-focused production verification for the homepage, guide pages, robots.txt, sitemap.xml, ads.txt, and built assets."
+    ],
+    stack: ["React", "TypeScript", "React Router", "Technical SEO", "GA4", "GitHub Actions"],
     linkLabel: "Live demo",
     linkHref: "https://freelance-finance.com/"
   },
   {
     title: "Field Service REST API",
     description: "A full-stack Node.js and Express REST API built for a real service business. Features JWT authentication, role-based access control, job and work order management, image uploads, password reset with email, and real-time schedule updates via Socket.io. Backed by MongoDB with Mongoose.",
-    stack: ["Node.js", "Express", "MongoDB", "JWT", "Socket.io"],
-    linkLabel: "View code",
+    highlights: [
+      "Implemented JWT authentication and role-based access control for protected business workflows.",
+      "Built REST endpoints for jobs, work orders, uploads, and password reset flows backed by MongoDB.",
+      "Implemented an automated notation/audit trail system for administrative account actions, logging who made user or role changes, what changed, and when, with paginated note retrieval for admin views."
+    ],
+    stack: ["Node.js", "Express", "MongoDB", "JWT", "Socket.io", "Audit Logging"],
+    linkLabel: "View code (admin notation/audit trail)",
     linkHref: "https://github.com/Glenn-Dunnegan/Epjrapi"
   },
   {
     title: "Portfolio Site",
     description: "This portfolio, built with React, TypeScript, Sass, and a Cloudflare Worker backend for the contact form. Includes Turnstile spam protection, a honeypot field, and request timing checks.",
+    highlights: [
+      "Built a frontend contact workflow with validation, timeout handling, and clear error states.",
+      "Added worker-side spam filtering, Turnstile verification, and origin checks for safer form handling.",
+      "Set up a practical deployment-friendly structure with Vite on the frontend and a Cloudflare Worker backend."
+    ],
     stack: ["Vite", "TypeScript", "Sass", "Cloudflare Workers"],
     linkLabel: "Contact me",
     linkHref: "#contact"
@@ -353,11 +379,11 @@ function App() {
         <section className="hero">
           <div className="container hero-grid">
             <div className="hero-copy">
-              <p className="eyebrow">Front-End Developer • React • Conversion-Focused Fixes</p>
-              <h1>From broken pages to polished experiences, I ship practical front-end upgrades fast.</h1>
+              <p className="eyebrow">Web Developer • React • TypeScript • Full-Stack Fundamentals</p>
+              <h1>I build responsive web applications with clean front-end implementation and practical backend support.</h1>
               <p className="lead">
-                I help small businesses improve trust and usability with clean React builds, better mobile layouts, stronger contact
-                workflows, and targeted performance updates that make websites feel professional and reliable.
+                I focus on React, TypeScript, and modern web application work: building polished interfaces, integrating APIs,
+                improving usability across devices, and shipping maintainable features that support real business needs.
               </p>
               <div className="hero-badge-grid" aria-label="Core services">
                 {heroServiceBadges.map((item) => (
@@ -376,11 +402,11 @@ function App() {
               </div>
             </div>
             <aside className="hero-panel" aria-label="Quick summary card">
-              <p className="panel-label">Core strengths</p>
+              <p className="panel-label">What I bring</p>
               <ul>
-                <li>Diagnosing and fixing front-end issues quickly</li>
-                <li>Building modern landing pages for service businesses</li>
-                <li>Improving contact forms, usability, and trust signals</li>
+                <li>React and TypeScript UI implementation with a strong responsive foundation</li>
+                <li>API integration and backend fundamentals including Node.js, auth flows, and MongoDB</li>
+                <li>Practical product thinking around usability, reliability, and maintainable code structure</li>
               </ul>
             </aside>
           </div>
@@ -390,16 +416,17 @@ function App() {
           <div className="container split-layout">
             <div>
               <p className="section-tag">About</p>
-              <h2>Practical front-end work built around clarity, speed, and real business needs.</h2>
+              <h2>Front-end focused development with hands-on full-stack experience.</h2>
             </div>
             <div className="content-card">
               <p>
-                I’ve been steadily building my web development skills with a strong focus on front-end implementation and full-stack fundamentals.
-                My goal is simple: deliver websites that look professional, work reliably, and solve actual problems for the people using them.
+                I build modern web experiences with a focus on React, TypeScript, responsive implementation, and clear user-facing results.
+                My work is strongest on the front end, but I am also comfortable supporting application needs with backend APIs,
+                authentication flows, MongoDB, and deployment-oriented tooling.
               </p>
               <p>
-                I enjoy modern React workflows, clean TypeScript structure, and improving existing sites when they need better layout, stronger
-                usability, or faster performance.
+                I am especially interested in roles where I can contribute across UI implementation, API integration, product polish,
+                and day-to-day web application improvements inside a collaborative engineering team.
               </p>
             </div>
           </div>
@@ -408,7 +435,7 @@ function App() {
         <section className="section section-muted" id="skills">
           <div className="container">
             <p className="section-tag">Skills</p>
-            <h2>Tools and services I use to improve business websites.</h2>
+            <h2>Core tools and engineering areas I can contribute in today.</h2>
             <div className="pill-grid">
               {skills.map((skill) => (
                 <span key={skill} className="pill">
@@ -422,13 +449,18 @@ function App() {
         <section className="section" id="projects">
           <div className="container">
             <p className="section-tag">Projects</p>
-            <h2>Recent work and representative examples.</h2>
+            <h2>Selected work that shows practical front-end and full-stack experience.</h2>
             <div className="project-grid">
               {projects.map((project) => (
                 <article key={project.title} className="project-card">
                   <div className="project-accent" />
                   <h3>{project.title}</h3>
                   <p>{project.description}</p>
+                  <ul className="project-points">
+                    {project.highlights.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                   <ul className="tech-list">
                     {project.stack.map((item) => (
                       <li key={item}>{item}</li>
@@ -447,9 +479,10 @@ function App() {
           <div className="container contact-shell">
             <div className="contact-info">
               <p className="section-tag">Contact</p>
-              <h2>Need help improving a site or shipping a front-end update?</h2>
+              <h2>Open to web developer and front-end opportunities.</h2>
               <p>
-                If you need layout fixes, a landing page, a small React feature, or general front-end cleanup, I'm available to talk through the work.
+                If you are hiring for a role involving React, TypeScript, responsive UI work, or practical full-stack web development,
+                I would be glad to talk.
               </p>
               <ul className="contact-links">
                 <li>
